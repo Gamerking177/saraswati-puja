@@ -44,14 +44,17 @@ app.get('/', (req, res) => {
 
 app.get("/show", async (req, res) => {
   try {
-    const allListings = await Listing.find({});
+    const allListings = await Listing.find({})
+      .select('title image _id')  // Select only essential fields
+      .limit(50)  // Limit total documents
+      .lean();  // Convert to plain JavaScript objects for faster processing
+
     res.render("listings/show", { allListings });
   } catch (error) {
     console.error("Error fetching events:", error);
     res.status(500).send("Internal Server Error");
-  }
+  }
 });
-
 // immage details route
 //Show Route
 app.get("/listings/:id", async (req, res) => {
